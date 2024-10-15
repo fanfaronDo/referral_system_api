@@ -1,55 +1,52 @@
 package service
 
 import (
+	"crypto/sha1"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/fanfaronDo/referral_system_api/internal/entry"
 	"github.com/fanfaronDo/referral_system_api/internal/storage"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
 const (
 	tokenExpireTime = time.Hour * 12
 	signedKey       = "KwkdkfewowelosklKalosdk"
+	salt            = "HAUWFGiwgbkwsGeHGeuh"
 )
 
 type claims struct {
 	jwt.StandardClaims
-	UserId   uint
-	Username string
+	UserId uint
 }
 
 type Auth struct {
-	storage storage.Auth
+	storage *storage.Storage
 }
 
-func NewAuth(storage storage.Auth) *Auth {
+func NewAuth(storage *storage.Storage) *Auth {
 	return &Auth{storage}
 }
 
 func (s *Auth) CreateUser(user *entry.User) error {
-	pass, err := s.generateHashForPassword(user.Password)
-	if err != nil {
-		return err
-	}
+	pass := s.generateHashForPassword(user.Password)
 	user.Password = pass
 	return s.storage.CreateUser(user)
 }
 
 func (s *Auth) GenerateToken(username, password string) (string, error) {
-	hash, err := s.generateHashForPassword(password)
+	user, err := s.storage.StorageAuth.GetUser(username, s.generateHashForPassword(password))
+
 	if err != nil {
 		return "", err
 	}
 
-	user, err := s.storage.GetUser(username, hash)
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims{
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(tokenExpireTime).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		user.ID,
-		user.Username,
 	})
 
 	return token.SignedString([]byte(signedKey))
@@ -75,7 +72,8 @@ func (a *Auth) ParseToken(accessToken string) (uint, error) {
 	return c.UserId, nil
 }
 
-func (s *Auth) generateHashForPassword(pass string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
-	return string(hash), err
+func (s *Auth) generateHashForPassword(pass string) string {
+	hash := sha1.New()
+	hash.Write([]byte(pass))
+	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
