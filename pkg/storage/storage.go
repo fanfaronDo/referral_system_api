@@ -1,13 +1,13 @@
 package storage
 
 import (
-	"github.com/fanfaronDo/referral_system_api/internal/entry"
+	"github.com/fanfaronDo/referral_system_api/pkg/model"
 	"gorm.io/gorm"
 )
 
 type StorageAuth interface {
-	CreateUser(user *entry.User) error
-	GetUser(username, password string) (*entry.User, error)
+	CreateUser(user *model.User) error
+	GetUser(username, password string) (*model.User, error)
 	DeleteUser(id int) error
 }
 

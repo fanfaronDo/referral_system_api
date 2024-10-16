@@ -1,12 +1,12 @@
 package service
 
 import (
-	"github.com/fanfaronDo/referral_system_api/internal/entry"
-	"github.com/fanfaronDo/referral_system_api/internal/storage"
+	"github.com/fanfaronDo/referral_system_api/pkg/model"
+	"github.com/fanfaronDo/referral_system_api/pkg/storage"
 )
 
 type ServiceAuth interface {
-	CreateUser(user *entry.User) error
+	CreateUser(user *model.User) error
 	GenerateToken(username, password string) (string, error)
 	ParseToken(accessToken string) (uint, error)
 }

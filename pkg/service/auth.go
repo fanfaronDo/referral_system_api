@@ -4,8 +4,8 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/fanfaronDo/referral_system_api/internal/entry"
-	"github.com/fanfaronDo/referral_system_api/internal/storage"
+	"github.com/fanfaronDo/referral_system_api/pkg/model"
+	"github.com/fanfaronDo/referral_system_api/pkg/storage"
 	"time"
 )
 
@@ -28,7 +28,7 @@ func NewAuth(storage *storage.Storage) *Auth {
 	return &Auth{storage}
 }
 
-func (s *Auth) CreateUser(user *entry.User) error {
+func (s *Auth) CreateUser(user *model.User) error {
 	pass := s.generateHashForPassword(user.Password)
 	user.Password = pass
 	return s.storage.CreateUser(user)

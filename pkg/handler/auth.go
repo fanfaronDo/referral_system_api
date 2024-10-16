@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"github.com/fanfaronDo/referral_system_api/internal/entry"
+	"github.com/fanfaronDo/referral_system_api/pkg/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func (h *Handler) signUp(ctx *gin.Context) {
-	var user entry.User
+	var user model.User
 
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -23,7 +23,7 @@ func (h *Handler) signUp(ctx *gin.Context) {
 }
 
 func (h *Handler) signIn(ctx *gin.Context) {
-	var user entry.User
+	var user model.User
 
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})

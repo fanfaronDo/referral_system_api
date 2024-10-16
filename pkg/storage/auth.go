@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/fanfaronDo/referral_system_api/internal/entry"
+	"github.com/fanfaronDo/referral_system_api/pkg/model"
 	"gorm.io/gorm"
 )
 
@@ -15,18 +15,18 @@ func NewAuth(db *gorm.DB) *Auth {
 	}
 }
 
-func (auth *Auth) CreateUser(user *entry.User) error {
+func (auth *Auth) CreateUser(user *model.User) error {
 	tx := auth.db.Create(user)
 	return tx.Error
 }
 
-func (auth *Auth) GetUser(username, password string) (*entry.User, error) {
-	var user entry.User
+func (auth *Auth) GetUser(username, password string) (*model.User, error) {
+	var user model.User
 	auth.db.Where("username = ? AND password = ?", username, password).First(&user)
 	return &user, nil
 }
 
 func (auth *Auth) DeleteUser(id int) error {
-	tx := auth.db.Where("id = ?", id).Delete(&entry.User{})
+	tx := auth.db.Where("id = ?", id).Delete(&model.User{})
 	return tx.Error
 }

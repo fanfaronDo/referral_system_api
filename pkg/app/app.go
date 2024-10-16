@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/fanfaronDo/referral_system_api/config"
-	"github.com/fanfaronDo/referral_system_api/internal/entry"
-	"github.com/fanfaronDo/referral_system_api/internal/handler"
-	"github.com/fanfaronDo/referral_system_api/internal/service"
-	"github.com/fanfaronDo/referral_system_api/internal/storage"
 	"github.com/fanfaronDo/referral_system_api/migrations"
+	"github.com/fanfaronDo/referral_system_api/pkg/handler"
+	"github.com/fanfaronDo/referral_system_api/pkg/model"
+	"github.com/fanfaronDo/referral_system_api/pkg/service"
+	"github.com/fanfaronDo/referral_system_api/pkg/storage"
 	"github.com/fanfaronDo/referral_system_api/server"
 	"log"
 	"os"
@@ -23,7 +23,7 @@ func Run(cnf *config.Config) error {
 		return err
 	}
 	migrator := migrations.NewMigrator(db)
-	err = migrator.MigrateUp(&entry.User{}, &entry.Referral{})
+	err = migrator.MigrateUp(&model.User{}, &model.Referral{}, &model.ReferralCode{})
 
 	if err != nil {
 		fmt.Println(err)

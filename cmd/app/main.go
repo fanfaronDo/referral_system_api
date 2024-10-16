@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/fanfaronDo/referral_system_api/config"
-	"github.com/fanfaronDo/referral_system_api/internal/app"
+	"github.com/fanfaronDo/referral_system_api/pkg/app"
 )
 
 func main() {
