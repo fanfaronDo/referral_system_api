@@ -59,6 +59,12 @@ func (r *Referral) GetReferralCode(code string) (model.ReferralCode, error) {
 	return referralCode, err
 }
 
+func (r *Referral) GetEmailById(userId int) (string, error) {
+	var email string
+	err := r.db.Table("users").Where("id = ?", userId).First(&email).Error
+	return email, err
+}
+
 func (r *Referral) DeleteReferralCode(codeID uint) error {
 	var referrerID uint
 	err := r.db.Table("referral_codes r").
