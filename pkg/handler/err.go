@@ -3,7 +3,9 @@ package handler
 import "errors"
 
 var (
-	ErrHeaderAuthUndefined = errors.New("header auth undefined")
-	ErrInvalidToken        = errors.New("invalid token")
-	ErrUserNotRegistered   = errors.New("user not registered")
+	ErrHeaderAuthUndefined    = errors.New("header auth undefined")
+	ErrInvalidToken           = errors.New("invalid token")
+	ErrUserNotRegistered      = errors.New("user not registered")
+	ErrReferralCodeIsRequired = errors.New("referral code is required")
+	ErrEmailRequired          = errors.New("email is required")
 )

@@ -13,6 +13,8 @@ type AuthService interface {
 
 type ReferralService interface {
 	CreateReferralCode(referralCode *model.ReferralCode) (string, error)
+	GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error)
+	DeleteReferralCode(userID uint, code string) error
 }
 
 type Service struct {

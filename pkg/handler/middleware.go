@@ -27,7 +27,7 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 	}
 
 	userid, err := h.service.AuthService.ParseToken(headerParts[1])
-	if err != nil {
+	if err != nil || userid == 0 {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": ErrInvalidToken.Error()})
 		return
 	}

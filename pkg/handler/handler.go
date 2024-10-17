@@ -30,8 +30,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	api := route.Group("/api", h.userIdentity)
 	{
 		api.POST("/referral-code", h.createReferralCode)
-		//api.GET("/referral-code", h.getReferralCodeByEmail)
-		//api.DELETE("/referral-code", h.deleteReferralCode)
+		api.GET("/referral-code", h.getReferralCodeByEmail)
+		api.DELETE("/referral-code/:code", h.deleteReferralCode)
 	}
 
 	return route

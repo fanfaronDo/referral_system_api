@@ -13,10 +13,10 @@ type AuthStorage interface {
 
 type ReferralCodeStorage interface {
 	CreateReferralCode(code *model.ReferralCode) error
-	GetReferralCodeByEmail(email string) (model.ReferralCode, error)
+	GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error)
 	GetReferralCode(code string) (model.ReferralCode, error)
 	GetReferralCodeByUserIdWithStatusActive(userID uint) (*model.ReferralCode, error)
-	DeleteReferralCode(codeID uint) error
+	DeleteReferralCode(userID uint, code string) error
 }
 
 type ReferralStorage interface {

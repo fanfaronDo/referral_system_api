@@ -47,6 +47,18 @@ func (r *Referral) CreateReferralCode(referralCode *model.ReferralCode) (string,
 	return codeActive, nil
 }
 
+func (r *Referral) DeleteReferralCode(userID uint, code string) error {
+	return r.storage.ReferralCodeStorage.DeleteReferralCode(userID, code)
+}
+
+func (r *Referral) GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error) {
+	referrerCode, err := r.storage.GetReferralCodeByEmail(userID, email)
+	if err != nil {
+		return model.ReferralCode{}, err
+	}
+	return referrerCode, nil
+}
+
 func (r *Referral) generateReferralCode(email string) string {
 	hash := sha256.New()
 	_, err := hash.Write([]byte(email + time.Now().String()))
