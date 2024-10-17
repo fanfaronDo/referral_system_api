@@ -14,7 +14,7 @@ func (h *Handler) signUp(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.service.ServiceAuth.CreateUser(&user); err != nil {
+	if err := h.service.AuthService.CreateUser(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -30,10 +30,10 @@ func (h *Handler) signIn(ctx *gin.Context) {
 		return
 	}
 
-	token, err := h.service.ServiceAuth.GenerateToken(user.Username, user.Password)
+	token, err := h.service.AuthService.GenerateToken(user.Username, user.Password)
 
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": ErrUserNotRegistered.Error()})
 		return
 	}
 

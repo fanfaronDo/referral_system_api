@@ -35,7 +35,7 @@ func (s *Auth) CreateUser(user *model.User) error {
 }
 
 func (s *Auth) GenerateToken(username, password string) (string, error) {
-	user, err := s.storage.StorageAuth.GetUser(username, s.generateHashForPassword(password))
+	user, err := s.storage.AuthStorage.GetUser(username, s.generateHashForPassword(password))
 
 	if err != nil {
 		return "", err

@@ -18,15 +18,33 @@ func NewReferral(storage *storage.Storage) *Referral {
 }
 
 func (r *Referral) CreateReferralCode(referralCode *model.ReferralCode) (string, error) {
-	email, err := r.storage.ReferralStorage.GetEmailById(referralCode.UserId)
+	var codeActive string
+
+	referralCodeActive, err := r.storage.ReferralCodeStorage.
+		GetReferralCodeByUserIdWithStatusActive(referralCode.UserId)
+
 	if err != nil {
 		return "", err
 	}
 
-	code := r.generateReferralCode(email)
-	// create referral
+	referralCodeValidator := NewReferralCodeActiveValidation(referralCodeActive)
 
-	return code, nil
+	if referralCodeValidator.IsExists() && referralCodeValidator.IsTimeAlive() {
+		return referralCodeValidator.referralCodeActive.Code, nil
+	}
+
+	email, err := r.storage.ReferralStorage.GetEmailById(referralCode.UserId)
+	if err != nil {
+		return "", ErrUserNotFound
+	}
+	codeActive = r.generateReferralCode(email)
+	referralCode.IsActive = true
+	referralCode.Code = codeActive
+	if err = r.storage.ReferralCodeStorage.CreateReferralCode(referralCode); err != nil {
+		return "", err
+	}
+
+	return codeActive, nil
 }
 
 func (r *Referral) generateReferralCode(email string) string {

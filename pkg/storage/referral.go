@@ -19,28 +19,14 @@ func (r *Referral) CreateReferral(referral *model.Referral) error {
 	return r.db.Create(referral).Error
 }
 
-func (r *Referral) CreateReferralCode(code *model.ReferralCode) error {
-	return r.db.Create(code).Error
-}
-
-func (r *Referral) GetReferralCodeByEmail(email string) (model.ReferralCode, error) {
-	var code model.ReferralCode
-	err := r.db.Table("users u").
-		Select("r.id as id, r.code as code, r.is_active as is_active, r.expiration_time as expiration_time, r.user_id user_id").
-		Joins("JOIN referral_codes r ON u.id = r.user_id").
-		Where("u.username = ?", email).
-		Scan(&code).Error
-	return code, err
-}
-
-func (r *Referral) GetReferrersById(referrerId int) ([]model.ReferralCode, error) {
+func (r *Referral) GetReferrersById(referrerId uint) ([]model.ReferralCode, error) {
 
 	var referredUsers []model.Referral
 	if err := r.db.Where("referrer_id = ?", referrerId).Find(&referredUsers).Error; err != nil {
 		return nil, err
 	}
 
-	userIds := make([]int, 0, len(referredUsers))
+	userIds := make([]uint, 0, len(referredUsers))
 	for _, referral := range referredUsers {
 		userIds = append(userIds, referral.ReferredId)
 	}
@@ -53,30 +39,13 @@ func (r *Referral) GetReferrersById(referrerId int) ([]model.ReferralCode, error
 	return referralCodes, nil
 }
 
-func (r *Referral) GetReferralCode(code string) (model.ReferralCode, error) {
-	var referralCode model.ReferralCode
-	err := r.db.Where("code = ?", code).First(&referralCode).Error
-	return referralCode, err
-}
-
-func (r *Referral) GetEmailById(userId int) (string, error) {
+func (r *Referral) GetEmailById(userId uint) (string, error) {
 	var email string
-	err := r.db.Table("users").Where("id = ?", userId).First(&email).Error
-	return email, err
-}
-
-func (r *Referral) DeleteReferralCode(codeID uint) error {
-	var referrerID uint
-	err := r.db.Table("referral_codes r").
-		Select("r.user_id").
-		Where("id = ?", codeID).
-		Scan(&referrerID).Error
+	var user model.User
+	err := r.db.Table("users").Where("id = ?", userId).First(&user).Error
 	if err != nil {
-		return err
+		return "", err
 	}
-
-	tx := r.db.Where("id = ?", codeID).Delete(&model.ReferralCode{})
-	tx.Where("id = ?", referrerID).Delete(&model.ReferralCode{})
-
-	return tx.Error
+	email = user.Username
+	return email, err
 }
