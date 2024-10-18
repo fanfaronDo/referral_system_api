@@ -31,12 +31,12 @@ func (r *ReferralCode) CreateReferralCode(referralCode *model.ReferralCode) (str
 		if referralCodeValidator.IsTimeAlive() {
 			return referralCodeValidator.referralCodeActive.Code, nil
 		}
-
-		err := r.storage.ReferralCodeStorage.UpdateReferralCodeStatus(referralCodeActive, referralCodeActive.IsActive)
-		if err != nil {
-			return "", err
+		if referralCodeActive.ID != 0 {
+			err := r.storage.ReferralCodeStorage.UpdateReferralCodeStatus(referralCodeActive, referralCodeActive.IsActive)
+			if err != nil {
+				return "", err
+			}
 		}
-
 	}
 
 	email, err := r.storage.ReferralStorage.GetEmailById(referralCode.UserId)

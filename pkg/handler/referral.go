@@ -5,12 +5,14 @@ import (
 	"github.com/fanfaronDo/referral_system_api/pkg/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 const (
 	code                  = "code"
 	email                 = "email"
+	id                    = "id"
 	MaxLengthReferralCode = 8
 )
 
@@ -83,4 +85,21 @@ func (h *Handler) getReferralCodeByEmail(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"code": referrer.Code})
+}
+
+func (h *Handler) getReferralsByIdReferrer(ctx *gin.Context) {
+	referrerID := ctx.Param(id)
+	referrerIDuint, err := strconv.ParseUint(referrerID, 10, 64)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": ErrIncorrectId.Error()})
+		return
+	}
+
+	referralCodes, err := h.service.ReferralService.GetReferrersById(uint(referrerIDuint))
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, referralCodes)
 }

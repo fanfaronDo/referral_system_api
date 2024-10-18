@@ -9,4 +9,5 @@ var (
 	ErrReferralCodeIsRequired = errors.New("referral code is required")
 	ErrEmailRequired          = errors.New("email is required")
 	ErrInvalidReferrerCode    = errors.New("invalid referrer code")
+	ErrIncorrectId            = errors.New("incorrect id")
 )
