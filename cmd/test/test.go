@@ -24,8 +24,12 @@ func main() {
 		return
 	}
 
-	s := storage.NewReferral(db)
-	e := s.DeleteReferralCode(3)
+	s := storage.NewReferralCode(db)
+	c, e := s.GetReferralCode("3cbed43c")
+	if e != nil {
+		log.Fatalf("%s", e.Error())
+	}
 
-	fmt.Println(e)
+	s.UpdateReferralCodeStatus(c, false)
+	fmt.Println(c)
 }

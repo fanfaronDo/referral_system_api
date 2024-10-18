@@ -19,25 +19,16 @@ func (r *ReferralCode) CreateReferralCode(code *model.ReferralCode) error {
 	return r.db.Create(code).Error
 }
 
-func (r *ReferralCode) GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error) {
-	var code model.ReferralCode
-	err := r.db.Table("users u").
-		Select("r.id as id, r.code as code, r.is_active as is_active, r.expiration_time as expiration_time, r.user_id user_id").
-		Joins("JOIN referral_codes r ON u.id = r.user_id").
-		Where("u.id = ? AND u.username = ? AND r.is_active = ?", userID, email, true).
-		Scan(&code).Error
-
-	if code.UserId == 0 {
-		return model.ReferralCode{}, ErrActiveReferralCodeNotFound
+func (r *ReferralCode) GetReferralCode(code string) (*model.ReferralCode, error) {
+	var referralCode model.ReferralCode
+	if err := r.db.Where("code=? AND is_active=?", code, true).First(&referralCode).Error; err != nil {
+		return nil, err
+	}
+	if referralCode.Code == "" {
+		return nil, ErrReferralCodeNotFound
 	}
 
-	return code, err
-}
-
-func (r *ReferralCode) GetReferralCode(code string) (model.ReferralCode, error) {
-	var referralCode model.ReferralCode
-	err := r.db.Where("code = ?", code).First(&referralCode).Error
-	return referralCode, err
+	return &referralCode, nil
 }
 
 func (r *ReferralCode) GetReferralCodeByUserIdWithStatusActive(userID uint) (*model.ReferralCode, error) {
@@ -48,6 +39,17 @@ func (r *ReferralCode) GetReferralCodeByUserIdWithStatusActive(userID uint) (*mo
 	}
 
 	return &referralConde, nil
+}
+
+func (r *ReferralCode) UpdateReferralCodeStatus(referralCode *model.ReferralCode, status bool) error {
+	if err := r.db.First(referralCode, referralCode.ID).Error; err != nil {
+		return err
+	}
+	referralCode.IsActive = status
+	if err := r.db.Save(referralCode).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *ReferralCode) DeleteReferralCode(userID uint, code string) error {

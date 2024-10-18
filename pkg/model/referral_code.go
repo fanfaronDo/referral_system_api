@@ -5,12 +5,6 @@ import (
 	"time"
 )
 
-type User struct {
-	gorm.Model
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 type ReferralCode struct {
 	gorm.Model
 	Code           string        `json:"code"`
@@ -19,8 +13,12 @@ type ReferralCode struct {
 	UserId         uint          `json:"user_id"`
 }
 
-type Referral struct {
-	gorm.Model
-	ReferrerId uint `json:"referrer_id"`
-	ReferredId uint `json:"referred_id"`
+func (r *ReferralCode) UpdateAliveTimeStatus() {
+	currentTime := time.Now()
+	timealive := currentTime.Sub(r.CreatedAt)
+	if timealive > r.ExpirationTime {
+		r.IsActive = false
+	} else {
+		r.IsActive = true
+	}
 }

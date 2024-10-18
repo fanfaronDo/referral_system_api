@@ -8,4 +8,5 @@ var (
 	ErrUserNotRegistered      = errors.New("user not registered")
 	ErrReferralCodeIsRequired = errors.New("referral code is required")
 	ErrEmailRequired          = errors.New("email is required")
+	ErrInvalidReferrerCode    = errors.New("invalid referrer code")
 )

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/fanfaronDo/referral_system_api/pkg/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -8,8 +9,9 @@ import (
 )
 
 const (
-	code  = "code"
-	email = "email"
+	code                  = "code"
+	email                 = "email"
+	MaxLengthReferralCode = 8
 )
 
 type referralCodeController struct {
@@ -34,8 +36,8 @@ func (h *Handler) createReferralCode(ctx *gin.Context) {
 	}
 
 	referralCode.ExpirationTime = duration
-
-	codecreate, err := h.service.ReferralService.CreateReferralCode(&referralCode)
+	fmt.Println(referralCode)
+	codecreate, err := h.service.ReferralCodeService.CreateReferralCode(&referralCode)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -50,9 +52,14 @@ func (h *Handler) deleteReferralCode(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": ErrReferralCodeIsRequired.Error()})
 		return
 	}
+	if len(refcode) != MaxLengthReferralCode {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": ErrInvalidReferrerCode.Error()})
+		return
+	}
+
 	userid := getUserId(ctx)
 
-	err := h.service.ReferralService.DeleteReferralCode(userid, refcode)
+	err := h.service.ReferralCodeService.DeleteReferralCode(userid, refcode)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -67,8 +74,9 @@ func (h *Handler) getReferralCodeByEmail(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": ErrEmailRequired.Error()})
 		return
 	}
+
 	userid := getUserId(ctx)
-	referrer, err := h.service.ReferralService.GetReferralCodeByEmail(userid, emailuser)
+	referrer, err := h.service.ReferralCodeService.GetReferralCodeByEmail(userid, emailuser)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

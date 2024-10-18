@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/fanfaronDo/referral_system_api/pkg/model"
-	"time"
 )
 
 type ReferralCodeActiveValidation struct {
@@ -18,11 +17,5 @@ func (v *ReferralCodeActiveValidation) IsExists() bool {
 }
 
 func (v *ReferralCodeActiveValidation) IsTimeAlive() bool {
-
-	currentTime := time.Now()
-	timealive := currentTime.Sub(v.referralCodeActive.CreatedAt)
-	if timealive > v.referralCodeActive.ExpirationTime {
-		return false
-	}
-	return true
+	return v.referralCodeActive.IsActive
 }
