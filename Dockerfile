@@ -1,10 +1,14 @@
 FROM golang:1.22.3
 
-WORKDIR=/app
-ENV GOPATH=/app
+ENV GOPATH=/
 
 COPY ./ ./
 RUN apt-get update
+RUN apt-get -y install postgresql-client
+
+RUN chmod +x wait-for-postgres.sh
 
 RUN go mod download
-RUN go build -o app ./cmd/app/main
+RUN go build -o app ./cmd/app/main.go
+
+ENTRYPOINT ["./app"]
