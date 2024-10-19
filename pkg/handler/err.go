@@ -10,4 +10,5 @@ var (
 	ErrEmailRequired          = errors.New("email is required")
 	ErrInvalidReferrerCode    = errors.New("invalid referrer code")
 	ErrIncorrectId            = errors.New("incorrect id")
+	ErrUserAlreadyExists      = errors.New("user already exists")
 )

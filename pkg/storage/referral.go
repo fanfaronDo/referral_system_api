@@ -39,21 +39,6 @@ func (r *Referral) GetReferrersById(referrerId uint) ([]model.ReferralCode, erro
 	return referralCodes, nil
 }
 
-func (r *Referral) GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error) {
-	var code model.ReferralCode
-	err := r.db.Table("users u").
-		Select("r.id as id, r.code as code, r.is_active as is_active, r.expiration_time as expiration_time, r.user_id user_id").
-		Joins("JOIN referrals r ON u.id = r.referrer_id").
-		Where("r.referred_id = ? AND u.username = ?", userID, email).
-		Scan(&code).Error
-
-	if code.UserId == 0 {
-		return model.ReferralCode{}, ErrActiveReferralCodeNotFound
-	}
-
-	return code, err
-}
-
 func (r *Referral) GetEmailById(userId uint) (string, error) {
 	var email string
 	var user model.User

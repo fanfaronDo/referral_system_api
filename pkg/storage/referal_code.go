@@ -41,6 +41,25 @@ func (r *ReferralCode) GetReferralCodeByUserIdWithStatusActive(userID uint) (*mo
 	return &referralConde, nil
 }
 
+func (r *ReferralCode) GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error) {
+	var code model.ReferralCode
+	err := r.db.Table("users u").
+		Select("*").
+		Joins("JOIN referrals r ON u.id = r.referrer_id").
+		Joins("JOIN referral_codes rc ON u.id = rc.user_id").
+		Where("r.referred_id = ? AND u.username = ?", userID, email).
+		Scan(&code).Error
+	if err != nil {
+		return model.ReferralCode{}, err
+	}
+
+	if code.UserId == 0 {
+		return model.ReferralCode{}, ErrActiveReferralCodeNotFound
+	}
+
+	return code, nil
+}
+
 func (r *ReferralCode) UpdateReferralCodeStatus(referralCode *model.ReferralCode, status bool) error {
 	if err := r.db.First(referralCode, referralCode.ID).Error; err != nil {
 		return err

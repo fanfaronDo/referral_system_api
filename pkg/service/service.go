@@ -13,6 +13,7 @@ type AuthService interface {
 	CreateUser(user *model.User) error
 	GenerateToken(username, password string) (string, error)
 	ParseToken(accessToken string) (uint, error)
+	IsUserExists(username string) bool
 }
 
 type ReferralCodeService interface {

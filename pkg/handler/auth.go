@@ -14,6 +14,11 @@ func (h *Handler) signUp(ctx *gin.Context) {
 		return
 	}
 
+	if h.service.AuthService.IsUserExists(user.Username) {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": ErrUserAlreadyExists.Error()})
+		return
+	}
+
 	if err := h.service.AuthService.CreateUser(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -57,7 +62,6 @@ func (h *Handler) signUpWithReferralCode(ctx *gin.Context) {
 	refcode, _ := h.service.ReferralCodeService.GetReferralCode(referrercode)
 
 	err := h.service.ReferralCodeService.CheckReferralCode(refcode)
-
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{"error": err.Error()})
@@ -67,6 +71,10 @@ func (h *Handler) signUpWithReferralCode(ctx *gin.Context) {
 	if err = ctx.ShouldBindJSON(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	if h.service.AuthService.IsUserExists(user.Username) {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": ErrUserAlreadyExists.Error()})
 	}
 
 	if err = h.service.AuthService.CreateUser(&user); err != nil {

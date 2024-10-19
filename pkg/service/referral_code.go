@@ -54,11 +54,7 @@ func (r *ReferralCode) CreateReferralCode(referralCode *model.ReferralCode) (str
 }
 
 func (r *ReferralCode) GetReferralCodeByEmail(userID uint, email string) (model.ReferralCode, error) {
-	referrerCode, err := r.storage.GetReferralCodeByEmail(userID, email)
-	if err != nil {
-		return model.ReferralCode{}, err
-	}
-	return referrerCode, nil
+	return r.storage.GetReferralCodeByEmail(userID, email)
 }
 
 func (r *ReferralCode) GetReferralCode(code string) (*model.ReferralCode, error) {

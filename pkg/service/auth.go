@@ -72,6 +72,11 @@ func (a *Auth) ParseToken(accessToken string) (uint, error) {
 	return c.UserId, nil
 }
 
+func (a *Auth) IsUserExists(username string) bool {
+	user, _ := a.storage.AuthStorage.GetUserByUsername(username)
+	return len(user.Username) != 0
+}
+
 func (s *Auth) generateHashForPassword(pass string) string {
 	hash := sha1.New()
 	hash.Write([]byte(pass))

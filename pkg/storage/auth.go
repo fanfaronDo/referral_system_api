@@ -26,6 +26,12 @@ func (auth *Auth) GetUser(username, password string) (*model.User, error) {
 	return &user, tx.Error
 }
 
+func (auth *Auth) GetUserByUsername(username string) (model.User, error) {
+	var user model.User
+	tx := auth.db.Where("username = ?", username).First(&user)
+	return user, tx.Error
+}
+
 func (auth *Auth) DeleteUser(id uint) error {
 	tx := auth.db.Where("id = ?", id).Delete(&model.User{})
 	return tx.Error
