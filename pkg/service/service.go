@@ -27,7 +27,7 @@ type ReferralCodeService interface {
 
 type ReferralService interface {
 	CreateReferral(referralCode *model.ReferralCode, userID uint) error
-	GetReferrersById(referrerId uint) ([]model.ReferralCode, error)
+	GetReferrersById(referrerId uint) ([]model.ReferralInfo, error)
 }
 
 type Service struct {

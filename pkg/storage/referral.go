@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"fmt"
 	"github.com/fanfaronDo/referral_system_api/pkg/model"
 	"gorm.io/gorm"
 )
@@ -19,24 +20,24 @@ func (r *Referral) CreateReferral(referral *model.Referral) error {
 	return r.db.Create(referral).Error
 }
 
-func (r *Referral) GetReferrersById(referrerId uint) ([]model.ReferralCode, error) {
+func (r *Referral) GetReferrersById(referrerId uint) ([]model.ReferralInfo, error) {
 
-	var referredUsers []model.Referral
-	if err := r.db.Where("referrer_id = ?", referrerId).Find(&referredUsers).Error; err != nil {
+	var referralInfo []model.ReferralInfo
+
+	err := r.db.
+		Table("referrals r").
+		Select("u.username as username, r.created_at as created_at").
+		Joins("JOIN users u ON r.referred_id = u.id").
+		Where("r.referrer_id = ?", referrerId).
+		Find(&referralInfo).Error
+
+	if err != nil {
 		return nil, err
 	}
 
-	userIds := make([]uint, 0, len(referredUsers))
-	for _, referral := range referredUsers {
-		userIds = append(userIds, referral.ReferredId)
-	}
+	fmt.Println(referralInfo)
 
-	var referralCodes []model.ReferralCode
-	if err := r.db.Where("user_id IN ?", userIds).Find(&referralCodes).Error; err != nil {
-		return nil, err
-	}
-
-	return referralCodes, nil
+	return referralInfo, nil
 }
 
 func (r *Referral) GetEmailById(userId uint) (string, error) {

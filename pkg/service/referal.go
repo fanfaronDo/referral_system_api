@@ -25,6 +25,6 @@ func (r *Referral) CreateReferral(referralCode *model.ReferralCode, userID uint)
 	return r.storage.ReferralStorage.CreateReferral(&referral)
 }
 
-func (r *Referral) GetReferrersById(referrerId uint) ([]model.ReferralCode, error) {
+func (r *Referral) GetReferrersById(referrerId uint) ([]model.ReferralInfo, error) {
 	return r.storage.GetReferrersById(referrerId)
 }

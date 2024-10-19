@@ -23,7 +23,7 @@ type ReferralCodeStorage interface {
 
 type ReferralStorage interface {
 	CreateReferral(referral *model.Referral) error
-	GetReferrersById(referrerId uint) ([]model.ReferralCode, error)
+	GetReferrersById(referrerId uint) ([]model.ReferralInfo, error)
 	GetEmailById(userId uint) (string, error)
 }
 
