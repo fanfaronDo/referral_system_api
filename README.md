@@ -18,4 +18,4 @@ API Создания реферальных кодов, хранения и ре
 ip контейнера с приложением 192.168.200.104
 
 Описание API доступно в спецификации
-- <pre><code>ReferralsAPI.postman_collection.json</code></pre>
+<pre><code>ReferralsAPI.postman_collection.json</code></pre>
