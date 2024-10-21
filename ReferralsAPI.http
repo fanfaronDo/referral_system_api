@@ -1,0 +1,150 @@
+# ReferralsAPI
+
+###
+@base_url = 192.168.200.104:8000
+
+# @name Ping
+# This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+# A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+GET {{base_url}}/ping
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Status code is 200", function () {
+    //     pm.response.to.have.status(200);
+    // });
+%}
+
+###
+
+# @name SignUp
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/auth/signup
+Content-Type: application/json
+
+{
+  "username": "other@mail.ru",
+  "password": "admin1"
+}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    // });
+    //
+%}
+
+###
+# @name SignUpWithRef
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/auth/signup/3c443ba9
+Content-Type: application/json
+
+{
+  "username": "pizda@mail.ru",
+  "password": "admin"
+}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    // });
+    //
+%}
+
+###
+# @name SignIn
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/auth/signin
+Content-Type: application/json
+
+{
+  "username": "sharipsvs@mail.ru",
+  "password": "admin"
+}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    //     var jsonData = pm.response.json();
+    //     pm.collectionVariables.set("BEARER", jsonData.token);
+    // });
+    //
+%}
+
+###
+# @name CreateReferralCode
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+POST {{base_url}}/api/referral-code
+Authorization: Bearer {{BEARER}}
+Content-Type: application/json
+
+{
+  "expiration_time": "48h"
+}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    // });
+    //
+%}
+
+###
+# @name GetReferralCodeByEmailReferrer
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+GET {{base_url}}/api/referral-code?
+    email=other@mail.ru
+Authorization: Bearer {{BEARER}}
+Content-Type: application/json
+
+{
+  "expiration_time": "48h"
+}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    // });
+    //
+%}
+
+###
+# @name GetReferralCodeByReferrerID
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+GET {{base_url}}/api/referral-code/2
+Authorization: Bearer {{BEARER}}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    // });
+    //
+%}
+
+###
+# @name DeleteReferralCode Copy
+# This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+# A successful POST request typically returns a `200 OK` or `201 Created` response code.
+DELETE {{base_url}}/api/referral-code/f6f6asda6s
+Authorization: Bearer {{BEARER}}
+
+> {%
+    // TODO: migrate to HTTP Client Response handler API
+    // pm.test("Successful POST request", function () {
+    //     pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+    // });
+    //
+%}
