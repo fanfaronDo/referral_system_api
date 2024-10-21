@@ -1,1 +1,1 @@
-CREATE DATABASE IF NOT EXISTS referrals;
+CREATE DATABASE referrals;
