@@ -9,7 +9,11 @@ API Создания реферальных кодов, хранения и ре
   - UI документация (Swagger/ReDoc)
 
 
-Запуск под средствам docker-compose
+Необходимо задать переменные окружения:
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=*****
+
+Пример запуска приложения:
   <pre><code>docker-compose up -d</code></pre>
 
 Все пременные окружения установленны в compose файле
