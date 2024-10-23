@@ -18,10 +18,6 @@ POSTGRES_PASSWORD=*****
 Пример запуска приложения:
   <pre><code>docker-compose up -d</code></pre>
 
-Все пременные окружения установленны в compose файле
-
-Настроена сеть между контейнерами 192.168.200.0/24
-ip контейнера с приложением 192.168.200.104
 
 Описание API доступно в спецификации
 <pre><code>ReferralsAPI.postman_collection.json</code></pre>
