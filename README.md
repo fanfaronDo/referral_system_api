@@ -10,8 +10,10 @@ API Создания реферальных кодов, хранения и ре
 
 
 Необходимо задать переменные окружения:
+<pre><code>
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=*****
+</code></pre>
 
 Пример запуска приложения:
   <pre><code>docker-compose up -d</code></pre>
